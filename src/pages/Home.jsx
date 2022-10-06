@@ -6,31 +6,36 @@ import Sceleton from '../components/PizzaBlock/Sceleton';
 import Sort from '../components/Sort';
 
 
-const Home = () => {
-      const [items, setItems] = useState([]);
-      const [isLoading, setIsLoading] = useState(true);
-      const [categoryId, setCategoryId] = useState(0);
-      const [sortType, setSortType] = useState({
-        name: 'популярности',
-        sortProperty: 'rating'
+const Home = ({ searchValue }) => {
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categoryId, setCategoryId] = useState(0);
+  const [sortType, setSortType] = useState({
+    name: 'популярности',
+    sortProperty: 'rating',
+  });
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sortType.sortProperty.replace('-', '');
+    const category = categoryId > 0 ? `category=${categoryId}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
+
+    fetch(
+      `https://63395945937ea77bfdc99bb3.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}${search}`,
+    )
+      .then((res) => res.json())
+      .then((arr) => {
+        setItems(arr);
+        setIsLoading(false);
       });
+    window.scrollTo(0, 0);
+  }, [categoryId, sortType, searchValue]);
 
-      useEffect(() => {
-        setIsLoading(true);
-
-        const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
-        const sortBy = sortType.sortProperty.replace('-', '');
-        const category = categoryId > 0 ? `category=${categoryId}` : '';
-
-        fetch(`https://63395945937ea77bfdc99bb3.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}`)
-          .then((res) => res.json())
-          .then((arr) => {
-            setItems(arr);
-            setIsLoading(false);
-          });
-          window.scrollTo(0, 0);
-      }, [categoryId, sortType]);
-
+  const pizzas = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const sceletons = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
 
   return (
     <div className="container">
@@ -41,11 +46,11 @@ const Home = () => {
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
         {isLoading
-          ? [...new Array(6)].map((_, index) => <Sceleton key={index} />)
-          : items.map((obj) => <PizzaBlock {...obj} key={obj.id} />)}
+          ? sceletons
+          : pizzas}
       </div>
     </div>
   );
-}
+};
 
 export default Home;

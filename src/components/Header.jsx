@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
-import logoSvg from '../assets/img/pizza-logo.svg'
+import logoSvg from '../assets/img/pizza-logo.svg';
 
-const Header = () => {
+import Search from './Search';
+
+const Header = ({ searchValue, setSearchValue }) => {
   return (
     <div className="header">
       <div className="container">
@@ -15,6 +17,10 @@ const Header = () => {
             </div>
           </div>
         </Link>
+        <Search 
+          searchValue={searchValue} 
+          setSearchValue={setSearchValue}
+        />
         <div className="header__cart">
           <Link to="/cart" class="button button--cart">
             <span>520 ₽</span>
@@ -53,6 +59,6 @@ const Header = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Header;
