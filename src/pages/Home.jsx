@@ -36,25 +36,42 @@ const Home = () => {
     dispatch(setCurrentPage(number))
   }
 
-  const fetchPizzas = () => {
-        setIsLoading(true);
+  const fetchPizzas = async () => {
+    setIsLoading(true);
 
-        const order = sortType.includes('-') ? 'asc' : 'desc';
-        const sortBy = sortType.replace('-', '');
-        const category = categoryId > 0 ? `category=${categoryId}` : '';
-        const search = searchValue ? `&search=${searchValue}` : '';
+    const order = sortType.includes('-') ? 'asc' : 'desc';
+    const sortBy = sortType.replace('-', '');
+    const category = categoryId > 0 ? `category=${categoryId}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
 
-        axios
-          .get(
-            `https://63395945937ea77bfdc99bb3.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
-          )
-          .then((res) => {
-            setItems(res.data);
-            setIsLoading(false);
-          });
+    // await axios
+    //   .get(
+    //     `https://63395945937ea77bfdc99bb3.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
+    //   )
+    //   .then((res) => {
+    //     setItems(res.data);
+    //     setIsLoading(false);
+    //   });
 
-        window.scrollTo(0, 0);
-  }
+    try {
+
+      const res = await axios.get(
+        `https://63395945937ea77bfdc99bb3.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
+      );
+
+      setItems(res.data);
+      setIsLoading(false);
+      
+    } catch (error) {
+      setIsLoading(false);
+      alert('Ошибка при загрузке пицц с сервера!')
+      console.log('ERROR', error);
+    }
+
+    
+
+    window.scrollTo(0, 0);
+  };
 
   //Если изменили параметры и был первый рендер
     useEffect(() => {
