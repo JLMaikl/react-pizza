@@ -1,6 +1,6 @@
-import { useEffect, useContext, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectFilter, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
@@ -99,7 +99,11 @@ const Home = () => {
 
 
 
-  const pizzas = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const pizzas = items.map((obj) => (
+    <Link to={`/pizza/${obj.id}`} key={obj.id}>
+      <PizzaBlock {...obj} />
+    </Link>
+  ));
   const sceletons = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
 
   return (
