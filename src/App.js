@@ -7,23 +7,19 @@ import FullPizza from './pages/FullPizza';
 import NotFound from './pages/NotFound';
 
 import './scss/app.scss';
+import MainLayout from './layouts/MainLayout';
 
 function App() {
   
   return (
-    <div className="wrapper">
-        <Header />
-        <div className="content">
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/pizza/:id" element={<FullPizza />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route path="" element={<Home />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="pizza/:id" element={<FullPizza />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 

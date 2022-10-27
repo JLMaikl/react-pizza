@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const FullPizza = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [ pizza, setPizza ] = useState();
 
     useEffect(() => {
@@ -14,7 +15,8 @@ const FullPizza = () => {
                   'https://63395945937ea77bfdc99bb3.mockapi.io/items/' + id);
                 setPizza(data);
             } catch (error) {
-                alert('Error')
+                alert('Error');
+                navigate('/');
             }
         }
 
