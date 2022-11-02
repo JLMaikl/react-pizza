@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import qs from 'qs';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -12,10 +12,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import Sceleton from '../components/PizzaBlock/Sceleton';
 import Sort, { menuList} from '../components/Sort';
 
-import { SearchContext } from '../App';
-
-
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {categoryId, sort, currentPage, searchValue } = useSelector(selectFilter); 
@@ -25,11 +22,11 @@ const Home = () => {
   const isSearch = useRef(false);
   const isMounted = useRef(false); 
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   }
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurrentPage(number))
   }
 
@@ -41,6 +38,7 @@ const Home = () => {
     const search = searchValue ? `&search=${searchValue}` : '';
 
       dispatch(
+        //@ts-ignore
         fetchPizzas({
           order,
           sortBy,
@@ -99,7 +97,7 @@ const Home = () => {
 
 
 
-  const pizzas = items.map((obj) => (
+  const pizzas = items.map((obj: any) => (
     <Link to={`/pizza/${obj.id}`} key={obj.id}>
       <PizzaBlock {...obj} />
     </Link>
