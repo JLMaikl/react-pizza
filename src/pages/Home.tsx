@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import qs from 'qs';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectFilter, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 
@@ -11,10 +11,11 @@ import Pagination from '../components/Pagination';
 import PizzaBlock from '../components/PizzaBlock';
 import Sceleton from '../components/PizzaBlock/Sceleton';
 import Sort, { menuList} from '../components/Sort';
+import { useAppDispatch } from '../redux/store';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {categoryId, sort, currentPage, searchValue } = useSelector(selectFilter); 
   const {items, status } = useSelector(selectPizzaData); 
 
@@ -37,14 +38,13 @@ const Home: React.FC = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-      dispatch(
-        //@ts-ignore
+      dispatch(        
         fetchPizzas({
           order,
           sortBy,
           category,
           search,
-          currentPage,
+          currentPage: String(currentPage),
         }),
       );   
 
@@ -97,10 +97,8 @@ const Home: React.FC = () => {
 
 
 
-  const pizzas = items.map((obj: any) => (
-    <Link to={`/pizza/${obj.id}`} key={obj.id}>
-      <PizzaBlock {...obj} />
-    </Link>
+  const pizzas = items.map((obj: any) => (    
+      <PizzaBlock {...obj} />    
   ));
   const sceletons = [...new Array(6)].map((_, index) => <Sceleton key={index} />);
 
